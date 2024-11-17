@@ -22,7 +22,6 @@ Devuelve todos los vehículos disponibles en la base de datos. Permite aplicar f
 Este endpoint permite recuperar una lista de vehículos, con la opción de aplicar filtros y ordenar los resultados por varios campos.
 
 **Parámetros de Query**:
-- **vendido**: Si se especifica como `false`, se filtran los vehículos que no están marcados como vendidos.
 - **orderBy**: Campo por el que se desea ordenar los resultados. Los campos válidos incluyen:
   - `marca`: Ordena los vehículos por marca.
   - `modelo`: Ordena los vehículos por modelo.
@@ -36,7 +35,7 @@ Para obtener todos los vehículos ordenados por marca en orden descendente:
 GET TP3 API-REST/api/vehiculos?orderBy=Marca&direccion=DESC
 
 - **filtro**: Campo por el que se desea filtrar los resultados. Los campos válidos incluyen:
-  - ``: Filtra los vehículos por marca.
+  - `vendido`: Si se especifica como `false`, se filtran los vehículos que no están marcados como vendidos.
 
 #### **GET TP3 API-REST/api/vehiculos/:id**
 Devuelve el vehículo correspondiente al ID solicitado.
@@ -51,16 +50,6 @@ Inserta un nuevo vehículo con la información proporcionada en el cuerpo de la 
 - `Patente`: Número de patente del vehículo.
 - `vendido`: Estado del vehículo (1 si esta vendido, 0 si no esta vendido).
 
-**Ejemplo de JSON a insertar**:
-```json
-{
-  "Marca": "Toyota",
-  "Kilometros": 30000,
-  "Patente": "ABC123",
-  "Modelo": "Corolla",
-  "vendido": 0
-}
-
 #### **PUT TP3 API-REST/api/vehiculos/:id**
 Modifica el vehículo correspondiente al ID solicitado. La información a modificar se envía en el cuerpo de la solicitud (en formato JSON).
 
@@ -71,17 +60,6 @@ Modifica el vehículo correspondiente al ID solicitado. La información a modifi
 - `Patente`: Número de patente del vehículo.
 - `vendido`: Estado del vehículo (1 si esta vendido, 0 si no esta vendido).
 
-**Ejemplo de JSON para actualizar**:
-```json
-{
-  "Marca": "Toyota",
-  "Kilometros": 35000,
-  "Patente": "DEF456",
-  "Modelo": "Corolla",
-  "vendido": 1
-}
-
 #### ** DELETE TP3 API-REST/api/vehiculos/:id**
-Elimina el vehículo correspondiente al ID solicitado.
-
+Elimina el vehículo correspondiente al ID solicitado.      
     
