@@ -1,143 +1,166 @@
 <?php
-require_once './app/models/task.model.php';
+require_once './app/models/vehiculo.model.php';
 require_once './app/views/json.view.php';
 
-class TaskApiController {
+class VehiculosApiController {
     private $model;
     private $view;
 
     public function __construct() {
-        $this->model = new TaskModel();
+        $this->model = new VehiculosModel();
         $this->view = new JSONView();
     }
 
-    // /api/tareas
-    // /api/tareas
+
     public function getAll($req, $res) {
-      // para filtrar entre las tareas finalizadas si o no
-        //primero declaro esta variable tasks como algo vacio
-        $filtrarFinalizadas= false;
-        //despues me fijo si los query estan seteados como finalizado y ademas esta en false entonces pedimos las tareas finalizadas
-        if (isset($req->query->finalizada) && $req->query->finalizada == 'false') {
-            $filtrarFinalizadas= true; }
+      
+  
+      
+        $filtrarVendidos= false;
+        
+        if (isset($req->query->vendido) && $req->query->vendido == 'false') {
+            $filtrarVendidos= true; }
      
        
-       //ordenamos x prioridad
+      
         $orderBy = false;
-        // y si esta seteado lo vamos a leer
+       
         if(isset($req->query->orderBy)){
             $orderBy=$req->query->orderBy;
         }
         
-        $tasks = $this->model->getTasks($filtrarFinalizadas, $orderBy);
+        $tasks = $this->model->getVehiculos($filtrarVendidos, $orderBy);
 
-        // mando las tareas a la vista
+        
         return $this->view->response($tasks);
     }
 
 
-    // /api/tareas/:id
     public function get($req, $res) {
-        // obtengo el id de la tarea desde la ruta
+        
         $id = $req->params->id;
+        $task = $this->model->getVehiculo($id);
 
-        // obtengo la tarea de la DB
-        $task = $this->model->getTask($id);
-
-        // pregunto si esta
+ 
         if(!$task) {
-            // le pasamos el status porque queremos algo distinto de 200
-            return $this->view->response("La tarea con el id=$id no existe", 404);
-            // si no esta envio dicho mensaje a la vista 
+           
+            return $this->view->response("El vehiculo con el id=$id no existe", 404);
+           
         }
 
-        // mando la tarea a la vista
+       
         return $this->view->response($task);
     }
 
-    //api/tareas/:id con el verbo (DELETE)
+
 
     public function delete($req,$res){
         $id= $req->params->id;
         
-        //chequeo si existe la tarea
-        $task= $this->model->getTask($id);
+     
+        $task= $this->model->getVehiculo($id);
         
         if(!$task){
-            // le mando un mensaje y un codigo en este caso el 404 not found 
-            return $this->view->response("La tarea con el id=$id no existe",404);
+       
+            return $this->view->response("El vehiculo con el id=$id no existe",404);
         }
 
-        $this->model->deleteTask($id);
-        $this->view->response("La tarea con el id=$id se elimino correctamente");
+        $this->model->deleteVehiculo($id);
+        $this->view->response("El vehiculo con el id=$id se elimino correctamente");
 
     }
 
-    //  api/tareas (POST)
+   
 
     public function create($req,$res){
-         //valido los datos
-         if(empty($req->body->titulo)||empty($req->body->prioridad)){
-            //400 bad request
+
+         if(empty($req->body->Marca)||empty($req->body->Modelo)){
+    
            return $this->view->response("Los datos a cargar no se encuentran",400);
         };
         
-        // obtengo los datos
-            // obtendo los datos del body del request
+    
             
-            $titulo= $req->body->titulo;
-            $descripcion= $req->body->descripcion;
-            $prioridad= $req->body->prioridad;
+            $Marca= $req->body->Marca;
+            $Kilometros= $req->body->Kilometros;
+            $Patente= $req->body->Patente;
+            $Modelo= $req->body->Modelo;
             $finalizada= $req->body->finalizada;
         
     
-        //inserto los datos
-        $id=$this->model->insertTask($titulo,$descripcion,$prioridad,$finalizada);
 
-        //una vez insertado si no, devolvia false
+        $id=$this->model->insertVehiculo($Marca, $Kilometros, $Patente,$Modelo, $finalizada);
+
+  
         if(!$id){
-            return $this->view->response("Eror al insertar tarea",500);
+            return $this->view->response("Eror al insertar vehiculo",500);
         }
            
-        // devuelvo la tarea que inserte
-        $task= $this->model->getTask($id); 
+  
+        $task= $this->model->getVehiculo($id); 
         return $this->view->response($task,201);
         
     }
 
-    //  api/tareas/:id (PUT)
+
 
     public function update($req,$res){
         $id= $req->params->id;
 
-        //chequeo si existe la tarea
-        $task= $this->model->getTask($id);
+
+        $task= $this->model->getVehiculo($id);
         
         if(!$task){
-            // le mando un mensaje y un codigo en este caso el 404 not found 
+          
              return $this->view->response("La tarea con el id=$id no existe",404);
         }
 
-        //valido los datos
-        if(empty($req->body->titulo)||empty($req->body->prioridad)){
-            //400 bad request
+     
+        if(empty($req->body->Marca)||empty($req->body->Modelo)){
+     
            return $this->view->response("Los datos a cargar no se encuentran",400);
         };
         
-        // obtengo los datos
-            // obtendo los datos del body del request
+       
             
-            $titulo= $req->body->titulo;
-            $descripcion= $req->body->descripcion;
-            $prioridad= $req->body->prioridad;
+            $Marca= $req->body->Marca;
+            $Kilometros= $req->body->Kilometros;
+            $Patente= $req->body->Patente;
+            $Modelo= $req->body->Modelo;
             $finalizada= $req->body->finalizada;
         
 
-        $this->model->updateTask($id,$titulo,$descripcion,$prioridad,$finalizada);
+        $this->model->updateVehiculo($id,$Marca, $Kilometros, $Patente,$Modelo, $finalizada);
 
-        $task= $this->model->getTask($id);
+        $vehiculo= $this->model->getVehiculo($id);
 
-        $this->view->response($task,200);
+        $this->view->response($vehiculo,200);
     }
+    public function setVendido($req, $res) {
+        $id = $req->params->id;
+
+      
+        $vehiculo = $this->model->getVehiculo($id);
+        if (!$vehiculo) {
+            return $this->view->response("El vehiculo con el id=$id no existe", 404);
+        }
+
+        if (!isset($req->body->vendido)) {
+            return $this->view->response('Faltan completar datos', 400);
+        }
+
+        if ($req->body->vendido!== 1 && $req->body->vendido !== 0) {
+            return $this->view->response('Tipo de dato incorrecto', 400);
+        }
+
+ 
+        $this->model->setVendido($id, $req->body->vendido);
+            
+
+         $task = $this->model->getVehiculo($id);
+         $this->view->response($task, 200);
+    }
+
+
 
 }
