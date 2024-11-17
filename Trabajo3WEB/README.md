@@ -1,10 +1,17 @@
-# TODOList API
-Lista de tareas utilizando renderización del lado del servidor con PHP y MySQL.
+# Trabajo Especial TERCERA ENTREGA
 
-## Importar la DB
-Importar el archivo `db_tareas.sql` dentro de PHPMyAdmin para tener la base de datos completa.
+## Integrantes
+  Marco Ciano
+  Julian Oroz
 
-# Usuario (A implementar)
+## Descripcion
+  Proporcionamos un sistema en el cual se puede almacenar, editar, eliminar y vender 
+  autos, dicho proyecto cuanta con una API REST, la cual nos permite hacer estas acciones.
 
-email: `nico@web2.com`
-pass: `123456`
+## Endpoints
+
+###GET tpespecialrest/api/vehiculos
+  Devuelve todos los productos disponibles en la base de datos, permitiendo opcionalmente aplicar filtrado y ordenamiento a los resultados.
+
+###GET tpespecialrest/api/productos/:ID
+Devuelve el producto correspondiente al ID solicitado.
